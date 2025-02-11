@@ -1,0 +1,8 @@
+import type { Express } from 'express';
+import { createJsonApi } from '../../create-json-api';
+import type { {{reqType}}, {{resType}} } from 'types/api/json/{{apiPath}}';
+
+export const handle{{apiName}}Api = (app: Express) =>
+    createJsonApi<{{reqType}}, {{resType}}>(app, '/{{apiPath}}', (req, res) => {
+        // TODO
+    });
