@@ -4,12 +4,19 @@
         "@types/node": "^22.10.7"
     },
     "scripts": {
-        "build": "tsc --build"
+        "build": "rimraf ./dist/es && rimraf ./dist/commonjs && tsc -p ./tsconfig.json && tsc -p ./tsconfig.commonjs.json"
     },
-    "main": "./dist/index.js",
-    "types": "./dist/index.d.ts",
     "exports": {
-        ".": "./dist/index.js",
-        "./*": "./dist/*.js"
+        ".": {
+            "import": "./dist/es/index.js",
+            "require": "./dist/commonjs/index.js"
+        },
+        "./*": {
+            "import": "./dist/es/*.js",
+            "require": "./dist/commonjs/*.js"
+        }
+    },
+    "dependencies": {
+        "rimraf": "^6.0.1"
     }
 }

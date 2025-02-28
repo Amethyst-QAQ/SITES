@@ -2,11 +2,11 @@
 
 import fs from 'fs';
 import path from 'path';
-import { toCamelCase } from '../lib/to-camel-case';
+import { toCamelCase } from '../lib/to-camel-case.js';
+import { packagesDir } from '../lib/path-getter.js';
 
 // 找到各种文件的目录
-const packagesDir = path.resolve(__dirname, '../../..');
-const apiDefDir = path.resolve(packagesDir, 'types/dist/api');
+const apiDefDir = path.resolve(packagesDir, 'types/dist/es/api');
 const jsonApiDefDir = path.resolve(apiDefDir, 'json');
 const reqStreamApiDefDir = path.resolve(apiDefDir, 'req-stream');
 const resStreamApiDefDir = path.resolve(apiDefDir, 'res-stream');

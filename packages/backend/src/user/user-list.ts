@@ -68,7 +68,11 @@ export const login = async (username: string, password: string) => {
         }
         throw new LoginError(FailReason.NOT_EXISTS);
     } catch (e) {
-        throw new LoginError(FailReason.UNKNOWN);
+        if (e instanceof LoginError) {
+            throw e;
+        } else {
+            throw new LoginError(FailReason.UNKNOWN);
+        }
     }
 };
 
