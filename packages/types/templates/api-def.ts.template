@@ -3,6 +3,6 @@ import { createApi } from '../create-api';
 import type { {{reqType}}, {{resType}} } from 'types/api/{{apiPath}}';
 
 export const handle{{apiName}}Api = (app: Express) =>
-    createJsonApi<{{reqType}}, {{resType}}>(app, '/{{apiPath}}', (req, res) => {
+    createApi<{{reqType}}, {{resType}}>(app, '/{{apiPath}}', (req, res) => {
         // TODO
     });

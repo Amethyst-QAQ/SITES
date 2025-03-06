@@ -1,0 +1,22 @@
+body {
+    margin: 0;
+    color: var(--el-text-color-primary);
+
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+    &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background-color: var(--el-text-color-placeholder);
+        border-left: 1px solid var(--el-border-color);
+
+        &:hover {
+            background-color: var(--el-text-color-secondary);
+        }
+    }
+    &::-webkit-scrollbar-track {
+        border-radius: 10px;
+        background-color: var(--el-bg-color);
+        border-left: 1px solid var(--el-border-color);
+    }
+}

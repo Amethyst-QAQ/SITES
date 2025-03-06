@@ -1,14 +1,22 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
+type UserInfo = {
+    username: string;
+    nickname: string;
+};
+
 export const useSessionStore = defineStore(
     'session',
     () => {
         const loggedIn = ref(false);
         const token = ref('');
-        return { loggedIn, token };
+        const userInfo = ref<UserInfo | undefined>(undefined);
+        return { loggedIn, token, userInfo };
     },
     {
-        persist: true,
+        persist: {
+            storage: sessionStorage,
+        },
     },
 );

@@ -13,6 +13,5 @@
     },
     "dependencies": {
         "prettier": "^3.4.2"
-    },
-    "packageManager": "pnpm@10.3.0+sha1.6981f53a2d726323a7fd5f4ca5107102338511c8"
+    }
 }

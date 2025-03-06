@@ -15,4 +15,7 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
     @Attribute(DataTypes.STRING)
     @NotNull()
     declare password: string;
+
+    @Attribute(DataTypes.STRING)
+    declare nickname: string | null;
 }

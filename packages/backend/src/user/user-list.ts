@@ -2,31 +2,101 @@ import { FailReason } from 'types/api/login';
 import { User } from '../db/models/User';
 
 class UserList {
-    private tokenToId: Record<string, number> = {};
-    private idToToken: Record<number, string> = {};
-    add(token: string, id: number) {
-        this.tokenToId[token] = id;
-        this.idToToken[id] = token;
+    private expireTime: number;
+    private tokenMap: Map<string, { id: number; expireTime: number }>;
+    private idMap: Map<number, { token: string; expireTime: number }>;
+    private cleanupInterval: NodeJS.Timeout;
+
+    constructor(expireTime: number = 30 * 60 * 1000, cleanupIntervalMs: number = 5 * 60 * 1000) {
+        this.expireTime = expireTime;
+        this.tokenMap = new Map();
+        this.idMap = new Map();
+
+        this.cleanupInterval = setInterval(() => {
+            this.cleanupExpiredSessions();
+        }, cleanupIntervalMs);
     }
 
-    removeId(id: number) {
-        const token = this.idToToken[id];
-        delete this.tokenToId[token];
-        delete this.idToToken[id];
+    destroy() {
+        clearInterval(this.cleanupInterval);
     }
 
-    removeToken(token: string) {
-        const id = this.tokenToId[token];
-        delete this.tokenToId[token];
-        delete this.idToToken[id];
+    private cleanupExpiredSessions() {
+        const now = Date.now();
+        for (const [token, entry] of this.tokenMap) {
+            if (entry.expireTime <= now) {
+                this.tokenMap.delete(token);
+                this.idMap.delete(entry.id);
+            }
+        }
     }
 
-    getId(token: string) {
-        return this.tokenToId[token] as number | undefined;
+    add(token: string, id: number): void {
+        const existingIdEntry = this.idMap.get(id);
+        if (existingIdEntry) {
+            this.tokenMap.delete(existingIdEntry.token);
+            this.idMap.delete(id);
+        }
+
+        const existingTokenEntry = this.tokenMap.get(token);
+        if (existingTokenEntry) {
+            this.idMap.delete(existingTokenEntry.id);
+            this.tokenMap.delete(token);
+        }
+
+        const newExpireTime = Date.now() + this.expireTime;
+        this.tokenMap.set(token, { id, expireTime: newExpireTime });
+        this.idMap.set(id, { token, expireTime: newExpireTime });
     }
 
-    getToken(id: number) {
-        return this.idToToken[id] as string | undefined;
+    removeId(id: number): void {
+        const entry = this.idMap.get(id);
+        if (entry) {
+            this.tokenMap.delete(entry.token);
+            this.idMap.delete(id);
+        }
+    }
+
+    removeToken(token: string): void {
+        const entry = this.tokenMap.get(token);
+        if (entry) {
+            this.idMap.delete(entry.id);
+            this.tokenMap.delete(token);
+        }
+    }
+
+    getId(token: string): number | undefined {
+        const entry = this.tokenMap.get(token);
+        if (!entry) return undefined;
+
+        const now = Date.now();
+        if (now >= entry.expireTime) {
+            this.tokenMap.delete(token);
+            this.idMap.delete(entry.id);
+            return undefined;
+        }
+
+        const newExpireTime = now + this.expireTime;
+        entry.expireTime = newExpireTime;
+        this.idMap.get(entry.id)!.expireTime = newExpireTime;
+        return entry.id;
+    }
+
+    getToken(id: number): string | undefined {
+        const entry = this.idMap.get(id);
+        if (!entry) return undefined;
+
+        const now = Date.now();
+        if (now >= entry.expireTime) {
+            this.idMap.delete(id);
+            this.tokenMap.delete(entry.token);
+            return undefined;
+        }
+
+        const newExpireTime = now + this.expireTime;
+        entry.expireTime = newExpireTime;
+        this.tokenMap.get(entry.token)!.expireTime = newExpireTime;
+        return entry.token;
     }
 }
 
@@ -35,7 +105,7 @@ const userList = new UserList();
 const generateToken = () => {
     const table = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
     let result = '';
-    for (let i = 0; i < 16; i++) {
+    for (let i = 0; i < 64; i++) {
         result += table[Math.floor(Math.random() * 64)];
     }
     return result;

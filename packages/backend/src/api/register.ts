@@ -10,7 +10,7 @@ export const handleRegisterApi = (app: Express) =>
                 res.send({ success: false, reason: FailReason.EXISTS });
                 return;
             }
-            const user = await User.create(req.body);
+            await User.create(req.body);
             res.send({ success: true });
         } catch (e) {
             res.send({ success: false, reason: FailReason.UNKNOWN });

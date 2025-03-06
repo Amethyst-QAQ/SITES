@@ -16,6 +16,7 @@
                     <div class="button-box">
                         <el-button @click="register">注册</el-button>
                         <el-button @click="router.back()">取消</el-button>
+                        <RouterLink to="/login">已有账号？登录</RouterLink>
                     </div>
                 </el-form-item>
             </el-form>
@@ -30,6 +31,7 @@ import { FailReason } from 'types/api/register';
 import { onBeforeUnmount, onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { MD5 } from 'crypto-js';
+import { myAlert } from '@/lib/myAlert';
 
 const input = reactive({
     username: '',
@@ -96,22 +98,22 @@ const register = () => {
                     password: MD5(input.password).toString(),
                 });
                 if (response.success) {
-                    alert('注册成功');
+                    myAlert.success('注册成功');
                     router.push('/');
                 } else {
                     switch (response.reason) {
                         case FailReason.EXISTS:
-                            alert('用户名已存在');
+                            myAlert.error('用户名已存在');
                             break;
                         default:
-                            alert('未知错误');
+                            myAlert.error('未知错误');
                     }
                 }
             } catch (e) {
-                alert('网络错误');
+                myAlert.error('网络错误');
             }
         } else {
-            alert('填写有误');
+            myAlert.error('填写有误');
         }
     });
 };
@@ -119,7 +121,7 @@ const register = () => {
 const outerFrame = ref<HTMLDivElement>();
 
 const resizeFrame = () => {
-    const height = outerFrame.value!.clientHeight;
+    const height = outerFrame.value!.offsetHeight;
     outerFrame.value!.style.marginTop = `calc((100vh - ${height}px) / 2)`;
 };
 
@@ -160,5 +162,8 @@ onBeforeUnmount(() => {
 .button-box {
     width: 100%;
     text-align: center;
+    > a {
+        margin-left: 12px;
+    }
 }
 </style>

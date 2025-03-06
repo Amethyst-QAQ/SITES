@@ -13,6 +13,7 @@
                     <div class="button-box">
                         <el-button @click="login">登录</el-button>
                         <el-button @click="router.back()">取消</el-button>
+                        <RouterLink to="/register">注册</RouterLink>
                     </div>
                 </el-form-item>
             </el-form>
@@ -27,6 +28,7 @@ import { MD5 } from 'crypto-js';
 import { onBeforeUnmount, onMounted, reactive, ref } from 'vue';
 import { FailReason } from 'types/api/login';
 import { useSessionStore } from '@/stores/session';
+import { myAlert } from '@/lib/myAlert';
 
 const input = reactive({
     username: '',
@@ -43,32 +45,33 @@ const login = async () => {
             username: input.username,
             password: MD5(input.password).toString(),
         });
-        if (response.success) {
-            session.loggedIn = true;
-            session.token = response.token;
-            alert('登录成功');
-            router.push('/');
-        } else {
+        if (!response.success) {
             switch (response.reason) {
                 case FailReason.NOT_EXISTS:
-                    alert('用户不存在');
+                    myAlert.error('用户不存在');
                     break;
                 case FailReason.PASSWORD_ERROR:
-                    alert('密码不正确');
+                    myAlert.error('密码不正确');
                     break;
                 case FailReason.UNKNOWN:
-                    alert('未知错误');
+                    myAlert.error('未知错误');
             }
+            return;
         }
+
+        session.loggedIn = true;
+        session.token = response.token;
+        myAlert.success('登录成功');
+        router.push('/');
     } catch (e) {
-        alert('网络错误');
+        myAlert.error('网络错误');
     }
 };
 
 const outerFrame = ref<HTMLDivElement>();
 
 const resizeFrame = () => {
-    const height = outerFrame.value!.clientHeight;
+    const height = outerFrame.value!.offsetHeight;
     outerFrame.value!.style.marginTop = `calc((100vh - ${height}px) / 2)`;
 };
 
@@ -109,5 +112,9 @@ onBeforeUnmount(() => {
 .button-box {
     width: 100%;
     text-align: center;
+
+    > a {
+        margin-left: 12px;
+    }
 }
 </style>
