@@ -1,10 +1,10 @@
 import type { Express } from 'express';
-import { createJsonApi } from '../../create-json-api';
-import { FailReason, type LoginReq, type LoginRes } from 'types/api/json/login';
-import { login, LoginError } from '../../user/user-list';
+import { createApi } from '../create-api';
+import { FailReason, type LoginReq, type LoginRes } from 'types/api/login';
+import { login, LoginError } from '../user/user-list';
 
 export const handleLoginApi = (app: Express) =>
-    createJsonApi<LoginReq, LoginRes>(app, '/login', async (req, res) => {
+    createApi<LoginReq, LoginRes>(app, '/login', async (req, res) => {
         try {
             const token = await login(req.body.username, req.body.password);
             res.send({ success: true, token });

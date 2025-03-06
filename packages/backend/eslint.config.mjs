@@ -13,7 +13,6 @@ export default tseslint.config(eslint.configs.recommended, tseslint.configs.reco
         '@typescript-eslint/no-unused-vars': 'off',
         '@typescript-eslint/no-explicit-any': 'off',
         '@typescript-eslint/consistent-type-imports': 'error',
-        'projectPlugin/req-stream-api': 'error',
     },
     files: ['src/**/*.ts'],
 });

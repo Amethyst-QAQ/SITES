@@ -1,12 +1,10 @@
-import { jsonApiRule } from './rules/json-api';
-import { reqStreamApiRule } from './rules/req-stream-api';
+import { apiDefRule } from './rules/api-def';
 
 export const plugin = {
     meta: {
         name: 'eslint-plugin',
     },
     rules: {
-        'json-api': jsonApiRule,
-        'req-stream-api': reqStreamApiRule,
+        'api-def': apiDefRule,
     },
 };

@@ -1,10 +1,10 @@
 import { AST_NODE_TYPES, ESLintUtils } from '@typescript-eslint/utils';
 import path from 'path';
 
-export const reqStreamApiRule = ESLintUtils.RuleCreator.withoutDocs({
+export const apiDefRule = ESLintUtils.RuleCreator.withoutDocs({
     create(context) {
         const fullPath = context.physicalFilename;
-        const targetPath = path.resolve(__dirname, '../../../types/src/api/req-stream');
+        const targetPath = path.resolve(__dirname, '../../../types/src/api');
         const relativePath = path.relative(path.dirname(fullPath), targetPath);
         const needCheck = relativePath == '';
 
@@ -15,6 +15,8 @@ export const reqStreamApiRule = ESLintUtils.RuleCreator.withoutDocs({
                 }
 
                 const exportedTypes: string[] = [];
+                let reqType: string | undefined;
+                let reqTypeNode: any;
                 let resType: string | undefined;
                 let resTypeNode: any;
                 let apiPath: string | undefined;
@@ -46,7 +48,10 @@ export const reqStreamApiRule = ESLintUtils.RuleCreator.withoutDocs({
                                 }
                                 const name = vd.id;
                                 if (name.type == AST_NODE_TYPES.Identifier) {
-                                    if (name.name == 'resType') {
+                                    if (name.name == 'reqType') {
+                                        reqType = value;
+                                        reqTypeNode = name;
+                                    } else if (name.name == 'resType') {
                                         resType = value;
                                         resTypeNode = name;
                                     } else if (name.name == 'apiPath') {
@@ -56,6 +61,21 @@ export const reqStreamApiRule = ESLintUtils.RuleCreator.withoutDocs({
                             }
                         }
                     }
+                }
+
+                if (!reqType) {
+                    context.report({
+                        node,
+                        messageId: 'noReqType',
+                        fix(fixer) {
+                            return fixer.insertTextAfter(node, "export const reqType = '';");
+                        },
+                    });
+                } else if (!exportedTypes.includes(reqType)) {
+                    context.report({
+                        node: reqTypeNode,
+                        messageId: 'wrongReqType',
+                    });
                 }
 
                 if (!resType) {
@@ -87,10 +107,12 @@ export const reqStreamApiRule = ESLintUtils.RuleCreator.withoutDocs({
     },
     meta: {
         docs: {
-            description: '请求为流的API定义必须符合固定格式',
+            description: 'Json API定义必须符合固定格式',
         },
         messages: {
+            noReqType: '必须以字符串字面量导出请求类型',
             noResType: '必须以字符串字面量导出响应类型',
+            wrongReqType: '请求类型必须是此文件导出的接口或类型别名',
             wrongResType: '响应类型必须是此文件导出的接口或类型别名',
             noApiPath: '必须以字符串字面量导出API路径',
         },

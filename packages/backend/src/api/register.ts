@@ -1,10 +1,10 @@
 import type { Express } from 'express';
-import { createJsonApi } from '../../create-json-api';
-import { FailReason, type RegisterReq, type RegisterRes } from 'types/api/json/register';
-import { User } from '../../db/models/User';
+import { createApi } from '../create-api';
+import { FailReason, type RegisterReq, type RegisterRes } from 'types/api/register';
+import { User } from '../db/models/User';
 
 export const handleRegisterApi = (app: Express) =>
-    createJsonApi<RegisterReq, RegisterRes>(app, '/register', async (req, res) => {
+    createApi<RegisterReq, RegisterRes>(app, '/register', async (req, res) => {
         try {
             if (await User.findOne({ where: { username: req.body.username } })) {
                 res.send({ success: false, reason: FailReason.EXISTS });

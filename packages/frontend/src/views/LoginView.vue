@@ -25,7 +25,7 @@ import { request } from '@/request';
 import { useRouter } from 'vue-router';
 import { MD5 } from 'crypto-js';
 import { onBeforeUnmount, onMounted, reactive, ref } from 'vue';
-import { FailReason } from 'types/api/json/login';
+import { FailReason } from 'types/api/login';
 import { useSessionStore } from '@/stores/session';
 
 const input = reactive({

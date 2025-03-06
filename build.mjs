@@ -2,7 +2,7 @@ import { spawn, exec } from 'child_process';
 import { platform } from 'os';
 
 const checkPwshExists = () => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         exec('where pwsh', (err) => {
             if (err) {
                 resolve(false);

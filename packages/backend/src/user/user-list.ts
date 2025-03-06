@@ -1,4 +1,4 @@
-import { FailReason } from 'types/api/json/login';
+import { FailReason } from 'types/api/login';
 import { User } from '../db/models/User';
 
 class UserList {

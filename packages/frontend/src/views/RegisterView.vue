@@ -26,7 +26,7 @@
 <script lang="ts" setup>
 import { request } from '@/request';
 import type { FormInstance, FormRules } from 'element-plus';
-import { FailReason } from 'types/api/json/register';
+import { FailReason } from 'types/api/register';
 import { onBeforeUnmount, onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { MD5 } from 'crypto-js';
