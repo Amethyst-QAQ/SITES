@@ -25,7 +25,7 @@
 import { faAngleLeft, faAngleRight, faAnglesLeft, faAnglesRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { ElButton, ElInputNumber } from 'element-plus';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
 const model = defineModel({ type: Number, required: true });
 
@@ -38,6 +38,10 @@ defineProps({
 
 const target = ref(model.value + 1);
 
+onMounted(() => {
+    target.value = model.value + 1;
+});
+
 const emit = defineEmits({
     change: (_value: number) => true,
 });
@@ -45,7 +49,7 @@ const emit = defineEmits({
 const jump = (value: number) => {
     if (value != model.value) {
         model.value = value;
-        target.value = model.value + 1;
+        target.value = value + 1;
         emit('change', value);
     }
 };
