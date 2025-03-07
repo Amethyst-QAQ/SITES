@@ -4,6 +4,7 @@ import { DeleteExamInfoFail, type DeleteExamInfoReq, type DeleteExamInfoRes } fr
 import { failWithReason, succeed } from '../utils/send-res';
 import { needAdmin } from '../utils/need-admin';
 import { ExamInfo } from '../db/models/ExamInfo';
+import { Op } from '@sequelize/core';
 
 export const handleDeleteExamInfoApi = (app: Express) =>
     createApi<DeleteExamInfoReq, DeleteExamInfoRes>(app, '/delete-exam-info', async (req, res) => {
@@ -13,7 +14,7 @@ export const handleDeleteExamInfoApi = (app: Express) =>
                 return;
             }
 
-            await ExamInfo.destroy({ where: { id: req.body.id } });
+            await ExamInfo.destroy({ where: { id: { [Op.in]: req.body.ids } } });
             succeed(res);
         } catch (e) {
             failWithReason(res, DeleteExamInfoFail.UNKNOWN);

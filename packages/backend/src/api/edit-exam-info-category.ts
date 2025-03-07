@@ -24,6 +24,7 @@ export const handleEditExamInfoCategoryApi = (app: Express) =>
             }
 
             category.name = req.body.name;
+            await category.save();
             succeed(res);
         } catch (e) {
             failWithReason(res, EditExamInfoCategoryFail.UNKNOWN);

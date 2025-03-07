@@ -1,10 +1,10 @@
 import type { Express } from 'express';
-import { createApi } from '../create-api';
 import type { CreateExamInfoCategoryReq, CreateExamInfoCategoryRes } from 'types/api/create-exam-info-category';
-import { needAdmin } from '../utils/need-admin';
-import { CreateExamInfoCategoryFail } from '../../../types/dist/es/api/create-exam-info-category';
-import { failWithReason, succeed } from '../utils/send-res';
+import { CreateExamInfoCategoryFail } from 'types/api/create-exam-info-category';
+import { createApi } from '../create-api';
 import { ExamInfoCategory } from '../db/models/ExamInfoCategory';
+import { needAdmin } from '../utils/need-admin';
+import { failWithReason, succeed } from '../utils/send-res';
 
 export const handleCreateExamInfoCategoryApi = (app: Express) =>
     createApi<CreateExamInfoCategoryReq, CreateExamInfoCategoryRes>(

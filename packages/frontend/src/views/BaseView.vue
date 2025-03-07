@@ -12,7 +12,7 @@
                 <div class="elem-middle">
                     <RouterLink to="/">必背资料</RouterLink>
                     <RouterLink to="/">模拟练习</RouterLink>
-                    <RouterLink to="/">考试信息</RouterLink>
+                    <RouterLink to="/exam-info">考试信息</RouterLink>
                     <RouterLink to="/">社区论坛</RouterLink>
                 </div>
                 <div class="elem-right">
@@ -29,20 +29,7 @@
             </div>
         </ElAffix>
         <div class="user-menu" v-if="userMenuVisible" :style="{ '--header-height': `${headerHeight}px` }">
-            <div>
-                <ElPopconfirm title="确定要登出吗？" @confirm="logout">
-                    <template #reference>
-                        <a>
-                            <FontAwesomeIcon :icon="faRightFromBracket" />
-                            登出
-                        </a>
-                    </template>
-                    <template #actions="{ confirm, cancel }">
-                        <ElButton size="small" @click="confirm">是</ElButton>
-                        <ElButton size="small" @click="cancel">否</ElButton>
-                    </template>
-                </ElPopconfirm>
-            </div>
+            <UserMenu v-model="userMenuVisible" />
         </div>
         <RouterView />
         <div style="font-size: 0">-</div>
@@ -55,13 +42,14 @@
 <script lang="ts" setup>
 import PageFooter from '@/components/PageFooter.vue';
 import ThemeSwitch from '@/components/ThemeSwitch.vue';
-import { myAlert } from '@/lib/myAlert';
+import UserMenu from '@/components/UserMenu.vue';
+import { myAlert } from '@/lib/my-alert';
 import { request } from '@/request';
 import { useSessionStore } from '@/stores/session';
 import { faUser } from '@fortawesome/free-regular-svg-icons';
-import { faAngleDown, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { ElAffix, ElButton, ElPopconfirm } from 'element-plus';
+import { ElAffix } from 'element-plus';
 import { storeToRefs } from 'pinia';
 import { UserInfoFail } from 'types/api/user-info';
 import { computed, onBeforeUnmount, onMounted, ref, type StyleValue } from 'vue';
@@ -130,18 +118,6 @@ onBeforeUnmount(() => {
 });
 
 const userMenuVisible = ref(false);
-
-const logout = async () => {
-    userMenuVisible.value = false;
-
-    try {
-        await request('/logout', { token: session.token });
-    } catch (e) {}
-
-    session.loggedIn = false;
-    session.userInfo = undefined;
-    myAlert.success('登出成功');
-};
 
 const footerStyle = computed((): StyleValue => {
     const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
@@ -244,10 +220,6 @@ const footerStyle = computed((): StyleValue => {
     border-radius: 4px;
     background-color: var(--el-bg-color);
     z-index: 100;
-
-    > div {
-        padding: 0.25em;
-    }
 }
 
 .footer {

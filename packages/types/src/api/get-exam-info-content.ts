@@ -7,15 +7,17 @@ export enum GetExamInfoContentFail {
     UNKNOWN,
 }
 
+export type ExamInfoContent = {
+    title: string;
+    content: string;
+    createdAt: number;
+    updatedAt: number;
+};
+
 export type GetExamInfoContentRes =
     | {
           success: true;
-          data: {
-              title: string;
-              content: string;
-              createdAt: number;
-              updatedAt: number;
-          };
+          data: ExamInfoContent;
       }
     | {
           success: false;

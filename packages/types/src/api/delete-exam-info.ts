@@ -1,6 +1,6 @@
 export type DeleteExamInfoReq = {
     token: string;
-    id: number;
+    ids: number[];
 };
 
 export enum DeleteExamInfoFail {

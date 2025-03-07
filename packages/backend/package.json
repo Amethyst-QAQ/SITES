@@ -4,12 +4,14 @@
         "@sequelize/core": "7.0.0-alpha.43",
         "@sequelize/postgres": "7.0.0-alpha.43",
         "@sequelize/sqlite3": "7.0.0-alpha.43",
+        "crypto-js": "^4.2.0",
         "express": "^4.21.2",
         "multer": "1.4.5-lts.1",
         "sqlite3": "^5.1.7",
         "types": "workspace:*"
     },
     "devDependencies": {
+        "@types/crypto-js": "^4.2.2",
         "@types/express": "^5.0.0",
         "@types/multer": "^1.4.12",
         "@types/node": "^22.10.7",

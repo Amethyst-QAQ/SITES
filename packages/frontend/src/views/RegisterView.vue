@@ -29,7 +29,7 @@
 
 <script lang="ts" setup>
 import ThemeSwitch from '@/components/ThemeSwitch.vue';
-import { myAlert } from '@/lib/myAlert';
+import { myAlert } from '@/lib/my-alert';
 import { request } from '@/request';
 import { MD5 } from 'crypto-js';
 import type { FormInstance, FormRules } from 'element-plus';
@@ -145,7 +145,7 @@ onBeforeUnmount(() => {
 <style lang="scss" scoped>
 .outer-frame {
     width: 30rem;
-    margin-left: calc((100vw - 30rem) / 2);
+    margin: 0 auto;
     border: 1px solid var(--el-border-color);
     border-radius: 4px;
 
