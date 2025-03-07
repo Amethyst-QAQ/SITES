@@ -5,10 +5,11 @@ export type LoginReq = {
 
 type LoginResSuccess = {
     success: true;
+    id: number;
     token: string;
 };
 
-export enum FailReason {
+export enum LoginFail {
     NOT_EXISTS,
     PASSWORD_ERROR,
     UNKNOWN,
@@ -16,7 +17,7 @@ export enum FailReason {
 
 type LoginResFail = {
     success: false;
-    reason: FailReason;
+    reason: LoginFail;
 };
 
 export type LoginRes = LoginResSuccess | LoginResFail;

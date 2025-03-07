@@ -3,7 +3,7 @@
 import fs from 'fs';
 import path from 'path';
 import { template } from '../lib/template.js';
-import { packagesDir } from '../lib/path-getter.js';
+import { packagesDir } from '../lib/local-only/path-getter.js';
 
 // 找到各种文件的目录
 const apiDefDir = path.resolve(packagesDir, 'types/dist/es/api');

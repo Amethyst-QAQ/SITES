@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { toCamelCase } from '../lib/to-camel-case.js';
-import { packagesDir } from '../lib/path-getter.js';
+import { packagesDir } from '../lib/local-only/path-getter.js';
 
 const apiDefDir = path.resolve(packagesDir, 'types/dist/es/api');
 const templatesDir = path.resolve(packagesDir, 'types/templates');

@@ -12,7 +12,6 @@ export class File extends Model<InferAttributes<File>, InferCreationAttributes<F
     @NotNull()
     declare name: string;
 
-    @Attribute(DataTypes.BLOB)
-    @NotNull()
-    declare content: Buffer;
+    @Attribute(DataTypes.STRING)
+    declare ext: string | null;
 }

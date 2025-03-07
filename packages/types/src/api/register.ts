@@ -7,14 +7,14 @@ type RegisterResSuccess = {
     success: true;
 };
 
-export enum FailReason {
+export enum RegisterFail {
     EXISTS,
     UNKNOWN,
 }
 
 type RegisterResFail = {
     success: false;
-    reason: FailReason;
+    reason: RegisterFail;
 };
 
 export type RegisterRes = RegisterResSuccess | RegisterResFail;

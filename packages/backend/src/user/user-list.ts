@@ -1,4 +1,4 @@
-import { FailReason } from 'types/api/login';
+import { LoginFail } from 'types/api/login';
 import { User } from '../db/models/User';
 
 class UserList {
@@ -112,7 +112,7 @@ const generateToken = () => {
 };
 
 export class LoginError extends Error {
-    constructor(readonly reason: FailReason) {
+    constructor(readonly reason: LoginFail) {
         super();
     }
 }
@@ -122,30 +122,40 @@ export const login = async (username: string, password: string) => {
         const user = await User.findOne({ where: { username } });
         if (user) {
             if (user.password != password) {
-                throw new LoginError(FailReason.PASSWORD_ERROR);
+                throw new LoginError(LoginFail.PASSWORD_ERROR);
             }
 
             const existingToken = userList.getToken(user.id);
             if (existingToken) {
-                return existingToken;
+                return { user, token: existingToken };
             }
             let token = generateToken();
             while (userList.getId(token)) {
                 token = generateToken();
             }
             userList.add(token, user.id);
-            return token;
+            return { user, token };
         }
-        throw new LoginError(FailReason.NOT_EXISTS);
+        throw new LoginError(LoginFail.NOT_EXISTS);
     } catch (e) {
         if (e instanceof LoginError) {
             throw e;
         } else {
-            throw new LoginError(FailReason.UNKNOWN);
+            throw new LoginError(LoginFail.UNKNOWN);
         }
     }
 };
 
-export const verify = (token: string) => userList.getId(token);
+export const verify = async (token: string) => {
+    const userId = userList.getId(token);
+
+    const user = await User.findByPk(userId);
+    if (!user) {
+        userList.removeToken(token);
+        return undefined;
+    }
+
+    return user;
+};
 
 export const logout = (token: string) => userList.removeToken(token);

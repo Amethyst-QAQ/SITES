@@ -2,36 +2,41 @@
     <div class="outer-frame" ref="outerFrame">
         <h1>注册</h1>
         <div class="inner-frame">
-            <el-form label-width="auto" :model="input" :rules="rules" status-icon ref="registerForm">
-                <el-form-item label="用户名" prop="username">
-                    <el-input v-model="input.username" />
-                </el-form-item>
-                <el-form-item label="密码" prop="password">
-                    <el-input v-model="input.password" type="password" show-password />
-                </el-form-item>
-                <el-form-item label="确认密码" prop="confirmPassword">
-                    <el-input v-model="input.confirmPassword" type="password" show-password />
-                </el-form-item>
-                <el-form-item>
+            <ElForm label-width="auto" :model="input" :rules="rules" status-icon ref="registerForm">
+                <ElFormItem label="用户名" prop="username">
+                    <ElInput v-model="input.username" />
+                </ElFormItem>
+                <ElFormItem label="密码" prop="password">
+                    <ElInput v-model="input.password" type="password" show-password />
+                </ElFormItem>
+                <ElFormItem label="确认密码" prop="confirmPassword">
+                    <ElInput v-model="input.confirmPassword" type="password" show-password />
+                </ElFormItem>
+                <ElFormItem>
                     <div class="button-box">
-                        <el-button @click="register">注册</el-button>
-                        <el-button @click="router.back()">取消</el-button>
-                        <RouterLink to="/login">已有账号？登录</RouterLink>
+                        <ElButton @click="register">注册</ElButton>
+                        <ElButton @click="router.back()">取消</ElButton>
+                        <RouterLink to="/login" replace>已有账号？登录</RouterLink>
                     </div>
-                </el-form-item>
-            </el-form>
+                </ElFormItem>
+            </ElForm>
         </div>
+    </div>
+    <div class="theme-switch-container">
+        <ThemeSwitch />
     </div>
 </template>
 
 <script lang="ts" setup>
+import ThemeSwitch from '@/components/ThemeSwitch.vue';
+import { myAlert } from '@/lib/myAlert';
 import { request } from '@/request';
+import { MD5 } from 'crypto-js';
 import type { FormInstance, FormRules } from 'element-plus';
-import { FailReason } from 'types/api/register';
+import { ElButton, ElForm, ElFormItem, ElInput } from 'element-plus';
+import { RegisterFail } from 'types/api/register';
 import { onBeforeUnmount, onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { MD5 } from 'crypto-js';
-import { myAlert } from '@/lib/myAlert';
 
 const input = reactive({
     username: '',
@@ -102,7 +107,7 @@ const register = () => {
                     router.push('/');
                 } else {
                     switch (response.reason) {
-                        case FailReason.EXISTS:
+                        case RegisterFail.EXISTS:
                             myAlert.error('用户名已存在');
                             break;
                         default:
@@ -165,5 +170,11 @@ onBeforeUnmount(() => {
     > a {
         margin-left: 12px;
     }
+}
+
+.theme-switch-container {
+    position: fixed;
+    right: 10px;
+    top: 10px;
 }
 </style>

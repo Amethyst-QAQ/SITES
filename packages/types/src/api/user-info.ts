@@ -1,22 +1,30 @@
+import type { PermissionLevel } from '../lib/permission-level';
+
 export type UserInfoReq = {
-    token: string;
+    id: number;
 };
 
-export enum FailReason {
-    NOT_LOGGED_IN,
+export enum UserInfoFail {
+    NOT_EXISTS,
     UNKNOWN,
 }
+
+export type UserInfo = {
+    username: string;
+    nickname: string;
+    avatarId: number;
+    description: string;
+    permissionLevel: PermissionLevel;
+};
 
 export type UserInfoRes =
     | {
           success: true;
-          id: number;
-          username: string;
-          nickname: string;
+          data: UserInfo;
       }
     | {
           success: false;
-          reason: FailReason;
+          reason: UserInfoFail;
       };
 
 export const reqType = 'UserInfoReq';

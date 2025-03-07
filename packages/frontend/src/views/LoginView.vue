@@ -2,33 +2,38 @@
     <div class="outer-frame" ref="outerFrame">
         <h1>登录</h1>
         <div class="inner-frame">
-            <el-form label-width="auto">
-                <el-form-item label="用户名" prop="username">
-                    <el-input v-model="input.username" />
-                </el-form-item>
-                <el-form-item label="密码" prop="password">
-                    <el-input v-model="input.password" type="password" show-password />
-                </el-form-item>
-                <el-form-item>
+            <ElForm label-width="auto">
+                <ElFormItem label="用户名" prop="username">
+                    <ElInput v-model="input.username" />
+                </ElFormItem>
+                <ElFormItem label="密码" prop="password">
+                    <ElInput v-model="input.password" type="password" show-password />
+                </ElFormItem>
+                <ElFormItem>
                     <div class="button-box">
-                        <el-button @click="login">登录</el-button>
-                        <el-button @click="router.back()">取消</el-button>
-                        <RouterLink to="/register">注册</RouterLink>
+                        <ElButton @click="login">登录</ElButton>
+                        <ElButton @click="router.back()">取消</ElButton>
+                        <RouterLink to="/register" replace>注册</RouterLink>
                     </div>
-                </el-form-item>
-            </el-form>
+                </ElFormItem>
+            </ElForm>
         </div>
+    </div>
+    <div class="theme-switch-container">
+        <ThemeSwitch />
     </div>
 </template>
 
 <script lang="ts" setup>
-import { request } from '@/request';
-import { useRouter } from 'vue-router';
-import { MD5 } from 'crypto-js';
-import { onBeforeUnmount, onMounted, reactive, ref } from 'vue';
-import { FailReason } from 'types/api/login';
-import { useSessionStore } from '@/stores/session';
+import ThemeSwitch from '@/components/ThemeSwitch.vue';
 import { myAlert } from '@/lib/myAlert';
+import { request } from '@/request';
+import { useSessionStore } from '@/stores/session';
+import { MD5 } from 'crypto-js';
+import { ElButton, ElForm, ElFormItem, ElInput } from 'element-plus';
+import { LoginFail } from 'types/api/login';
+import { onBeforeUnmount, onMounted, reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const input = reactive({
     username: '',
@@ -47,13 +52,13 @@ const login = async () => {
         });
         if (!response.success) {
             switch (response.reason) {
-                case FailReason.NOT_EXISTS:
+                case LoginFail.NOT_EXISTS:
                     myAlert.error('用户不存在');
                     break;
-                case FailReason.PASSWORD_ERROR:
+                case LoginFail.PASSWORD_ERROR:
                     myAlert.error('密码不正确');
                     break;
-                case FailReason.UNKNOWN:
+                case LoginFail.UNKNOWN:
                     myAlert.error('未知错误');
             }
             return;
@@ -61,6 +66,7 @@ const login = async () => {
 
         session.loggedIn = true;
         session.token = response.token;
+        session.userId = response.id;
         myAlert.success('登录成功');
         router.push('/');
     } catch (e) {
@@ -116,5 +122,11 @@ onBeforeUnmount(() => {
     > a {
         margin-left: 12px;
     }
+}
+
+.theme-switch-container {
+    position: fixed;
+    right: 10px;
+    top: 10px;
 }
 </style>

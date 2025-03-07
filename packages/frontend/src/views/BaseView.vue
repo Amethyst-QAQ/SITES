@@ -1,7 +1,7 @@
 <template>
     <div class="content-body" ref="contentBody">
         <div style="font-size: 0">-</div>
-        <el-affix>
+        <ElAffix>
             <div class="header" ref="baseHeader">
                 <div class="elem-left">
                     <RouterLink to="/">
@@ -16,14 +16,7 @@
                     <RouterLink to="/">社区论坛</RouterLink>
                 </div>
                 <div class="elem-right">
-                    <el-switch v-model="isDark" class="theme-switch" @change="updateTheme">
-                        <template #active-action>
-                            <FontAwesomeIcon :icon="faMoon" class="moon" />
-                        </template>
-                        <template #inactive-action>
-                            <FontAwesomeIcon :icon="faSun" class="sun" />
-                        </template>
-                    </el-switch>
+                    <ThemeSwitch />
                     <div class="user-wrapper">
                         <FontAwesomeIcon :icon="faUser" class="user-icon" />
                         <RouterLink to="/login" v-if="!loggedIn">登录</RouterLink>
@@ -34,10 +27,10 @@
                     </div>
                 </div>
             </div>
-        </el-affix>
+        </ElAffix>
         <div class="user-menu" v-if="userMenuVisible" :style="{ '--header-height': `${headerHeight}px` }">
             <div>
-                <el-popconfirm title="确定要登出吗？" @confirm="logout">
+                <ElPopconfirm title="确定要登出吗？" @confirm="logout">
                     <template #reference>
                         <a>
                             <FontAwesomeIcon :icon="faRightFromBracket" />
@@ -45,10 +38,10 @@
                         </a>
                     </template>
                     <template #actions="{ confirm, cancel }">
-                        <el-button size="small" @click="confirm">是</el-button>
-                        <el-button size="small" @click="cancel">否</el-button>
+                        <ElButton size="small" @click="confirm">是</ElButton>
+                        <ElButton size="small" @click="cancel">否</ElButton>
                     </template>
-                </el-popconfirm>
+                </ElPopconfirm>
             </div>
         </div>
         <RouterView />
@@ -60,33 +53,21 @@
 </template>
 
 <script lang="ts" setup>
-import { useThemeStore } from '@/stores/theme';
-import { storeToRefs } from 'pinia';
-import { computed, onBeforeUnmount, onMounted, ref, type StyleValue } from 'vue';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faMoon, faSun, faUser } from '@fortawesome/free-regular-svg-icons';
-import { faRightFromBracket, faAngleDown } from '@fortawesome/free-solid-svg-icons';
-import { useSessionStore } from '@/stores/session';
-import { request } from '@/request';
-import { FailReason } from 'types/api/user-info';
-import { myAlert } from '@/lib/myAlert';
 import PageFooter from '@/components/PageFooter.vue';
+import ThemeSwitch from '@/components/ThemeSwitch.vue';
+import { myAlert } from '@/lib/myAlert';
+import { request } from '@/request';
+import { useSessionStore } from '@/stores/session';
+import { faUser } from '@fortawesome/free-regular-svg-icons';
+import { faAngleDown, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { ElAffix, ElButton, ElPopconfirm } from 'element-plus';
+import { storeToRefs } from 'pinia';
+import { UserInfoFail } from 'types/api/user-info';
+import { computed, onBeforeUnmount, onMounted, ref, type StyleValue } from 'vue';
 
-const { isDark } = storeToRefs(useThemeStore());
 const session = useSessionStore();
 const { loggedIn } = storeToRefs(session);
-
-const updateTheme = () => {
-    const htmlElem = document.querySelector('html');
-    if (!htmlElem) {
-        return;
-    }
-    if (isDark.value) {
-        htmlElem.classList.add('dark');
-    } else {
-        htmlElem.classList.remove('dark');
-    }
-};
 
 const getUserInfo = async () => {
     if (!session.loggedIn || session.userInfo) {
@@ -94,21 +75,18 @@ const getUserInfo = async () => {
     }
 
     try {
-        const response = await request('/user-info', { token: session.token });
+        const response = await request('/user-info', { id: session.userId });
         if (!response.success) {
             switch (response.reason) {
-                case FailReason.NOT_LOGGED_IN:
-                    myAlert.error('获取用户信息失败: 未登录');
-                case FailReason.UNKNOWN:
+                case UserInfoFail.NOT_EXISTS:
+                    myAlert.error('获取用户信息失败: 用户不存在');
+                case UserInfoFail.UNKNOWN:
                     myAlert.error('获取用户信息失败: 未知错误');
             }
             return;
         }
 
-        session.userInfo = {
-            username: response.username,
-            nickname: response.nickname,
-        };
+        session.userInfo = { ...response.data };
     } catch (e) {
         myAlert.error('获取用户信息失败: 网络错误');
     }
@@ -236,16 +214,6 @@ const footerStyle = computed((): StyleValue => {
     margin-left: auto;
     display: flex;
     align-items: center;
-}
-
-.theme-switch {
-    --el-switch-on-color: var(--el-switch-off-color);
-    .moon {
-        color: var(--el-border-color);
-    }
-    .sun {
-        color: var(--el-text-color-regular);
-    }
 }
 
 .user-wrapper {
