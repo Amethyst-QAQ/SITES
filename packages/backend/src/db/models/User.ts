@@ -1,7 +1,18 @@
-import type { CreationOptional, InferAttributes, InferCreationAttributes } from '@sequelize/core';
+import type { CreationOptional, InferAttributes, InferCreationAttributes, NonAttribute } from '@sequelize/core';
 import { DataTypes, Model } from '@sequelize/core';
-import { Attribute, AutoIncrement, Default, NotNull, PrimaryKey } from '@sequelize/core/decorators-legacy';
+import {
+    Attribute,
+    AutoIncrement,
+    Default,
+    HasMany,
+    HasOne,
+    NotNull,
+    PrimaryKey,
+} from '@sequelize/core/decorators-legacy';
 import { PermissionLevel } from 'types/lib/permission-level';
+import { LearnRecord } from './LearnRecord';
+import { LearnTime } from './LearnTime';
+import { OldLearnTime } from './OldLearnTime';
 
 export class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
     @Attribute(DataTypes.INTEGER)
@@ -30,4 +41,31 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
     @NotNull()
     @Default(PermissionLevel.NORMAL)
     declare permissionLevel: CreationOptional<PermissionLevel>;
+
+    @HasMany(() => LearnRecord, {
+        foreignKey: 'userId',
+        sourceKey: 'id',
+        inverse: {
+            as: 'user',
+        },
+    })
+    declare learnRecords?: NonAttribute<LearnRecord[]>;
+
+    @HasMany(() => LearnTime, {
+        foreignKey: 'userId',
+        sourceKey: 'id',
+        inverse: {
+            as: 'user',
+        },
+    })
+    declare learnTime?: NonAttribute<LearnTime[]>;
+
+    @HasOne(() => OldLearnTime, {
+        foreignKey: 'userId',
+        sourceKey: 'id',
+        inverse: {
+            as: 'user',
+        },
+    })
+    declare oldLearnTime?: NonAttribute<OldLearnTime>;
 }

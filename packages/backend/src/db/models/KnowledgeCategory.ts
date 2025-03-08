@@ -1,11 +1,11 @@
 import type { CreationOptional, InferAttributes, InferCreationAttributes, NonAttribute } from '@sequelize/core';
 import { DataTypes, Model } from '@sequelize/core';
 import { Attribute, AutoIncrement, HasMany, NotNull, PrimaryKey } from '@sequelize/core/decorators-legacy';
-import { ExamInfo } from './ExamInfo';
+import { Knowledge } from './Knowledge';
 
-export class ExamInfoCategory extends Model<
-    InferAttributes<ExamInfoCategory>,
-    InferCreationAttributes<ExamInfoCategory>
+export class KnowledgeCategory extends Model<
+    InferAttributes<KnowledgeCategory>,
+    InferCreationAttributes<KnowledgeCategory>
 > {
     @Attribute(DataTypes.INTEGER)
     @PrimaryKey()
@@ -16,12 +16,16 @@ export class ExamInfoCategory extends Model<
     @NotNull()
     declare name: string;
 
-    @HasMany(() => ExamInfo, {
+    @Attribute(DataTypes.TEXT)
+    @NotNull()
+    declare description: string;
+
+    @HasMany(() => Knowledge, {
         foreignKey: 'categoryId',
         sourceKey: 'id',
         inverse: {
             as: 'category',
         },
     })
-    declare items?: NonAttribute<ExamInfo[]>;
+    declare items?: NonAttribute<Knowledge[]>;
 }

@@ -1,6 +1,7 @@
-import type { CreationOptional, InferAttributes, InferCreationAttributes } from '@sequelize/core';
+import type { CreationOptional, InferAttributes, InferCreationAttributes, NonAttribute } from '@sequelize/core';
 import { DataTypes, Model } from '@sequelize/core';
-import { Attribute, AutoIncrement, Default, NotNull, PrimaryKey } from '@sequelize/core/decorators-legacy';
+import { Attribute, AutoIncrement, BelongsTo, Default, NotNull, PrimaryKey } from '@sequelize/core/decorators-legacy';
+import { ExamInfoCategory } from './ExamInfoCategory';
 
 export class ExamInfo extends Model<InferAttributes<ExamInfo>, InferCreationAttributes<ExamInfo>> {
     @Attribute(DataTypes.INTEGER)
@@ -34,4 +35,14 @@ export class ExamInfo extends Model<InferAttributes<ExamInfo>, InferCreationAttr
     @NotNull()
     @Default(false)
     declare isImportant: CreationOptional<boolean>;
+
+    @BelongsTo(() => ExamInfoCategory, {
+        foreignKey: 'categoryId',
+        targetKey: 'id',
+        inverse: {
+            type: 'hasMany',
+            as: 'items',
+        },
+    })
+    declare category?: NonAttribute<ExamInfoCategory>;
 }
