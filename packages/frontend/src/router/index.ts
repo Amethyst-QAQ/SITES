@@ -29,7 +29,7 @@ const router = createRouter({
                     component: HomeView,
                 },
                 {
-                    path: '/exam-info',
+                    path: 'exam-info',
                     children: [
                         {
                             path: '',

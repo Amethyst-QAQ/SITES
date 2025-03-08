@@ -5,10 +5,18 @@ export type ParsedAttachments = {
         attachment: string;
     }[];
     lastFragment?: string;
+    images: string[];
 };
 
 export const parseAttachments = (content: string) => {
-    const result: ParsedAttachments = { fragments: [] };
+    const result: ParsedAttachments = { fragments: [], images: [] };
+
+    const imgParseRe = /!\[.+?\]\((\S+?)\)/g;
+    let imgParseMatch: RegExpExecArray | null = null;
+    while ((imgParseMatch = imgParseRe.exec(content)) != null) {
+        result.images.push(imgParseMatch[1]);
+    }
+
     const firstAttachmentRe = /^\s*{{attachment::(\S+?)}}(.+)$/s;
     const hasFirstAttachment = firstAttachmentRe.exec(content);
     if (hasFirstAttachment) {
