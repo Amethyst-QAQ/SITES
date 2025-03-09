@@ -74,7 +74,7 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .important-frame {
-    max-width: 60rem;
+    max-width: calc(var(--main-frame-width) - 1rem);
     margin: 1rem auto;
     padding: 0.5rem;
     border: 1px solid var(--el-border-color);
@@ -85,7 +85,7 @@ onMounted(async () => {
 }
 
 .category-frame {
-    max-width: 60rem;
+    max-width: calc(var(--main-frame-width) - 1rem);
     margin: 0 auto;
     padding: 0.5rem;
     border: 1px solid var(--el-border-color);

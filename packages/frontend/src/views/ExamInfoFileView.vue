@@ -1,5 +1,6 @@
 <template>
     <div class="outer-frame">
+        <BackLink />
         <ElSkeleton :rows="20" animated v-if="contentLoading" :throttle="300" />
         <template v-else>
             <h1 class="main-title">{{ content!.title }}</h1>
@@ -13,6 +14,7 @@
 </template>
 
 <script lang="ts" setup>
+import BackLink from '@/components/BackLink.vue';
 import MarkdownComponent from '@/components/MarkdownComponent.vue';
 import { myAlert } from '@/lib/my-alert';
 import { request } from '@/request';
@@ -64,7 +66,7 @@ onMounted(loadContent);
 
 <style lang="scss" scoped>
 .outer-frame {
-    max-width: 60rem;
+    max-width: calc(var(--main-frame-width) - 2rem);
     margin: 0 auto;
     margin-top: 1rem;
     border: 1px solid var(--el-border-color);

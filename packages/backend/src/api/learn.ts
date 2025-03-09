@@ -22,7 +22,9 @@ export const handleLearnApi = (app: Express) =>
 
             const record = await LearnRecord.findOne({ where: { knowledgeItemId: req.body.id, userId: user.id } });
             if (!record) {
-                await LearnRecord.create({ knowledgeItemId: req.body.id, userId: user.id });
+                await LearnRecord.create({ knowledgeItemId: req.body.id, userId: user.id, date: new Date() });
+            } else {
+                await record.update({ date: new Date() });
             }
 
             succeed(res);

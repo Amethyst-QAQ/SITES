@@ -1,10 +1,12 @@
 <template>
-    <MarkdownAttachment v-if="parsedContent.firstAttachment" :file="parsedContent.firstAttachment" />
-    <template v-for="fragment in parsedContent.fragments">
-        <div v-html="fragment.content"></div>
-        <MarkdownAttachment :file="fragment.content" />
-    </template>
-    <div v-if="parsedContent.lastFragment" v-html="parsedContent.lastFragment"></div>
+    <div class="markdown-component">
+        <MarkdownAttachment v-if="parsedContent.firstAttachment" :file="parsedContent.firstAttachment" />
+        <template v-for="fragment in parsedContent.fragments">
+            <div v-html="fragment.content"></div>
+            <MarkdownAttachment :file="fragment.content" />
+        </template>
+        <div v-if="parsedContent.lastFragment" v-html="parsedContent.lastFragment"></div>
+    </div>
 </template>
 
 <script lang="ts" setup>
@@ -32,4 +34,18 @@ const parsedContent = computed(() => {
 });
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.markdown-component {
+    pre {
+        background-color: var(--el-bg-color-overlay);
+        border-radius: 4px;
+        padding: 0.25em;
+    }
+
+    code {
+        font-family: 'Jetbrains Mono', 'Consolas', 'Courier New', Courier, monospace;
+        background-color: var(--el-bg-color-overlay);
+        border-radius: 4px;
+    }
+}
+</style>

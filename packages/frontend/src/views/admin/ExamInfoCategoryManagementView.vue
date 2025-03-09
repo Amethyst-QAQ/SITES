@@ -93,7 +93,7 @@ const saveRow = async (row: DataRow) => {
             switch (response.reason) {
                 case EditExamInfoCategoryFail.NOT_LOGGED_IN:
                     myAlert.error('未登录');
-                    session.loggedIn = false;
+                    session.cleanSession();
                     router.push('/');
                     break;
                 case EditExamInfoCategoryFail.NO_PERMISSION:
@@ -130,7 +130,7 @@ const deleteRow = async (row: DataRow) => {
             switch (response.reason) {
                 case DeleteExamInfoCategoryFail.NOT_LOGGED_IN:
                     myAlert.error('未登录');
-                    session.loggedIn = false;
+                    session.cleanSession();
                     router.push('/');
                     break;
                 case DeleteExamInfoCategoryFail.NO_PERMISSION:
@@ -169,7 +169,7 @@ const createCategory = async () => {
             switch (response.reason) {
                 case CreateExamInfoCategoryFail.NOT_LOGGED_IN:
                     myAlert.error('未登录');
-                    session.loggedIn = false;
+                    session.cleanSession();
                     router.push('/');
                     break;
                 case CreateExamInfoCategoryFail.NO_PERMISSION:

@@ -17,8 +17,8 @@ import { myAlert } from '@/lib/my-alert';
 import { request } from '@/request';
 import { useSessionStore } from '@/stores/session';
 import { ElButton, ElFormItem, ElInput, ElRow, ElSkeleton } from 'element-plus';
-import { EditExamInfoFail } from 'types/api/edit-exam-info';
-import { GetExamInfoContentFail, type ExamInfoContent } from 'types/api/get-exam-info-content';
+import { EditKnowledgeItemFail } from 'types/api/edit-knowledge-item';
+import { GetKnowledgeItemContentFail, type KnowledgeItemContent } from 'types/api/get-knowledge-item-content';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -31,23 +31,23 @@ const props = defineProps({
 
 const contentLoading = ref(true);
 
-const content = ref<ExamInfoContent | undefined>(undefined);
+const content = ref<KnowledgeItemContent | undefined>(undefined);
 
 const router = useRouter();
 
 const loadContent = async () => {
     try {
-        const response = await request('/get-exam-info-content', {
+        const response = await request('/get-knowledge-item-content', {
             id: props.id,
         });
 
         if (!response.success) {
             switch (response.reason) {
-                case GetExamInfoContentFail.NOT_EXISTS:
+                case GetKnowledgeItemContentFail.NOT_EXISTS:
                     myAlert.error('信息不存在');
                     router.back();
                     break;
-                case GetExamInfoContentFail.UNKNOWN:
+                case GetKnowledgeItemContentFail.UNKNOWN:
                     myAlert.error('未知错误');
             }
             return;
@@ -66,7 +66,7 @@ const session = useSessionStore();
 
 const save = async () => {
     try {
-        const response = await request('/edit-exam-info', {
+        const response = await request('/edit-knowledge-item', {
             token: session.token,
             id: props.id,
             title: content.value!.title,
@@ -75,20 +75,20 @@ const save = async () => {
 
         if (!response.success) {
             switch (response.reason) {
-                case EditExamInfoFail.NOT_LOGGED_IN:
+                case EditKnowledgeItemFail.NOT_LOGGED_IN:
                     myAlert.error('未登录');
                     session.cleanSession();
                     router.push('/');
                     break;
-                case EditExamInfoFail.NO_PERMISSION:
+                case EditKnowledgeItemFail.NO_PERMISSION:
                     myAlert.error('无权限');
                     router.push('/');
                     break;
-                case EditExamInfoFail.NOT_EXISTS:
+                case EditKnowledgeItemFail.NOT_EXISTS:
                     myAlert.error('编辑的内容不存在');
                     router.back();
                     break;
-                case EditExamInfoFail.UNKNOWN:
+                case EditKnowledgeItemFail.UNKNOWN:
                     myAlert.error('未知错误');
             }
             return;

@@ -1,5 +1,14 @@
 {
-    "cSpell.words": ["fontawesome", "fortawesome", "funcs", "kramed", "Persistedstate", "popconfirm", "pwsh"],
+    "cSpell.words": [
+        "echarts",
+        "fontawesome",
+        "fortawesome",
+        "funcs",
+        "kramed",
+        "Persistedstate",
+        "popconfirm",
+        "pwsh"
+    ],
     "explorer.fileNesting.enabled": true,
     "explorer.fileNesting.patterns": {
         "tsconfig.json": "tsconfig.*.json, env.d.ts",

@@ -68,7 +68,7 @@ const login = async () => {
         session.token = response.token;
         session.userId = response.id;
         myAlert.success('登录成功');
-        router.push('/');
+        router.back();
     } catch (e) {
         myAlert.error('网络错误');
     }

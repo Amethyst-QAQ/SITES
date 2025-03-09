@@ -35,13 +35,17 @@ const refreshToken = async () => {
             }
         } catch (e) {
             myAlert.warning('登录会话已过期');
-            session.loggedIn = false;
+            session.cleanSession();
         }
     }
 };
 
-onMounted(() => {
+onMounted(async () => {
     updateTheme();
+    await refreshToken();
+    if (session.loggedIn) {
+        await session.initLearnTime();
+    }
     intervalId.value = setInterval(refreshToken, 5 * 60 * 1000);
 });
 

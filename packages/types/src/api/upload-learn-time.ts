@@ -5,10 +5,9 @@ export type LearnTimeRecord = {
 
 export type UploadLearnTimeReq = {
     token: string;
-    records: {
-        timeToken: string;
-        data: LearnTimeRecord[];
-    }[];
+    requestNewToken: boolean;
+    timeToken: string;
+    data: LearnTimeRecord[];
 };
 
 export enum UploadLearnTimeFail {

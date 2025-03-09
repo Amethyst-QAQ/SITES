@@ -37,12 +37,14 @@ export const handleGetCategoryLearnInfoApi = (app: Express) =>
                     },
                     include: {
                         association: 'items',
+                        required: true,
                         include: {
                             association: 'learnRecords',
                             required: true,
                             include: {
                                 association: 'user',
                                 where: { id: user.id },
+                                required: true,
                             },
                         },
                     },

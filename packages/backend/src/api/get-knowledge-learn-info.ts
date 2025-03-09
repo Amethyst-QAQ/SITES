@@ -27,6 +27,7 @@ export const handleGetKnowledgeLearnInfoApi = (app: Express) =>
                             include: {
                                 association: 'user',
                                 where: { id: user.id },
+                                required: true,
                             },
                         },
                     }),

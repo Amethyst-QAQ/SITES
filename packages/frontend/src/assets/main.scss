@@ -1,3 +1,5 @@
+@forward './theme.scss';
+
 body {
     margin: 0;
     color: var(--el-text-color-primary);
@@ -19,4 +21,10 @@ body {
         background-color: var(--el-bg-color);
         border-left: 1px solid var(--el-border-color);
     }
+
+    --main-frame-width: calc(min(60rem, 100vw - 2rem));
+}
+
+.el-progress-bar__innerText {
+    color: var(--el-text-color-primary);
 }

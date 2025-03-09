@@ -14,10 +14,11 @@
 
 <script lang="ts" setup>
 import type { ExamInfoInList } from 'types/api/get-exam-info';
+import type { PropType } from 'vue';
 
 defineProps({
     data: {
-        type: null as unknown as { new (...args: any[]): ExamInfoInList[] },
+        type: Array as PropType<ExamInfoInList[]>,
         required: true,
     },
 });

@@ -13,6 +13,7 @@
         </ElFormItem>
     </div>
     <div v-if="selectedCategory >= 0">
+        <MarkdownComponent :content="manual" />
         <ElButton @click="uploadInfo" :disabled="uploading">选择一个文件夹</ElButton>
         <div class="log-container" v-if="logs.length > 0">
             <div v-for="i in logs">{{ i }}</div>
@@ -21,14 +22,16 @@
 </template>
 
 <script lang="ts" setup>
+import MarkdownComponent from '@/components/MarkdownComponent.vue';
 import { myAlert } from '@/lib/my-alert';
 import { rebuildMarkdown } from '@/lib/parse-attachments';
-import { uploadFolder } from '@/lib/upload-folder';
+import { ListFileError, uploadFolder } from '@/lib/upload-folder';
 import { request } from '@/request';
 import { useSessionStore } from '@/stores/session';
 import { ElButton, ElFormItem, ElOption, ElSelect, ElSkeleton } from 'element-plus';
 import { CreateExamInfoFail } from 'types/api/create-exam-info';
 import { onMounted, ref } from 'vue';
+import manual from '@/assets/exam-info-upload-manual.md?raw';
 
 const categoryLoading = ref(true);
 const categories = ref<{ id: number; name: string }[]>([]);
@@ -63,57 +66,61 @@ const uploadInfo = async () => {
     logs.value = [];
 
     const directoryHandle = (await (window as any).showDirectoryPicker()) as FileSystemDirectoryHandle;
-    const markdownList = await uploadFolder(directoryHandle, logs.value);
+    try {
+        const markdownList = await uploadFolder(directoryHandle, logs.value);
 
-    logs.value.push('开始上传考试信息');
+        logs.value.push('开始上传考试信息');
 
-    await Promise.all(
-        markdownList.map((o) =>
-            (async () => {
-                logs.value.push(`开始上传${o.name}`);
-                try {
-                    const response = await request('/create-exam-info', {
-                        token: session.token,
-                        title: o.name,
-                        content: rebuildMarkdown(o.parsed),
-                        categoryId: selectedCategory.value,
-                    });
+        await Promise.all(
+            markdownList.map((o) =>
+                (async () => {
+                    logs.value.push(`开始上传${o.name}`);
+                    try {
+                        const response = await request('/create-exam-info', {
+                            token: session.token,
+                            title: o.name,
+                            content: rebuildMarkdown(o.parsed),
+                            categoryId: selectedCategory.value,
+                        });
 
-                    if (!response.success) {
-                        switch (response.reason) {
-                            case CreateExamInfoFail.NOT_LOGGED_IN:
-                                logs.value.push(`上传${o.name}失败: 未登录`);
-                                break;
-                            case CreateExamInfoFail.NO_PERMISSION:
-                                logs.value.push(`上传${o.name}失败: 无权限`);
-                                break;
-                            case CreateExamInfoFail.CATEGORY_NOT_EXISTS:
-                                logs.value.push(`上传${o.name}失败: 类别不存在`);
-                                break;
-                            case CreateExamInfoFail.UNKNOWN:
-                                logs.value.push(`上传${o.name}失败: 未知错误`);
+                        if (!response.success) {
+                            switch (response.reason) {
+                                case CreateExamInfoFail.NOT_LOGGED_IN:
+                                    logs.value.push(`上传${o.name}失败: 未登录`);
+                                    break;
+                                case CreateExamInfoFail.NO_PERMISSION:
+                                    logs.value.push(`上传${o.name}失败: 无权限`);
+                                    break;
+                                case CreateExamInfoFail.CATEGORY_NOT_EXISTS:
+                                    logs.value.push(`上传${o.name}失败: 类别不存在`);
+                                    break;
+                                case CreateExamInfoFail.UNKNOWN:
+                                    logs.value.push(`上传${o.name}失败: 未知错误`);
+                            }
+                            return;
                         }
-                        return;
-                    }
 
-                    logs.value.push(`上传${o.name}成功`);
-                } catch (e) {
-                    logs.value.push(`上传${o.name}失败: 网络错误`);
-                }
-            })(),
-        ),
-    );
-    uploading.value = false;
+                        logs.value.push(`上传${o.name}成功`);
+                    } catch (e) {
+                        logs.value.push(`上传${o.name}失败: 网络错误`);
+                    }
+                })(),
+            ),
+        );
+        uploading.value = false;
+    } catch (e) {
+        if (e instanceof ListFileError) {
+            logs.value.push(`获取文件列表失败`);
+        } else {
+            logs.value.push(`未知错误`);
+        }
+    }
 };
 </script>
 
 <style lang="scss" scoped>
 .category-container {
     margin-bottom: 1rem;
-}
-
-.upload-icon {
-    font-size: 5rem;
 }
 
 .log-container {

@@ -104,7 +104,7 @@ const register = () => {
                 });
                 if (response.success) {
                     myAlert.success('注册成功');
-                    router.push('/');
+                    router.replace('/login');
                 } else {
                     switch (response.reason) {
                         case RegisterFail.EXISTS:

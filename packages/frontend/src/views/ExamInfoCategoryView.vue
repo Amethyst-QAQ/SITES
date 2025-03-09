@@ -1,5 +1,6 @@
 <template>
     <div class="main-frame">
+        <BackLink />
         <ElSkeleton v-if="categoryLoading" :rows="0" animated :throttle="300" />
         <h3 v-else>{{ categoryName }}</h3>
         <ElSkeleton v-if="categoryLoading" :rows="20" animated :throttle="300" />
@@ -13,6 +14,7 @@
 </template>
 
 <script lang="ts" setup>
+import BackLink from '@/components/BackLink.vue';
 import ExamInfoList from '@/components/ExamInfoList.vue';
 import PageSelector from '@/components/PageSelector.vue';
 import { myAlert } from '@/lib/my-alert';
@@ -115,7 +117,7 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .main-frame {
-    max-width: 60rem;
+    max-width: calc(var(--main-frame-width) - 1rem);
     margin: 1rem auto;
     padding: 0.5rem;
     border: 1px solid var(--el-border-color);

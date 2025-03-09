@@ -16,36 +16,28 @@ export const handleUploadLearnTimeApi = (app: Express) =>
                 return;
             }
 
+            const startDate = verifyTimeToken(req.body.token, req.body.timeToken);
+            if (!startDate) {
+                failWithReason(res, UploadLearnTimeFail.INVALID_DATA);
+                return;
+            }
             const now = new Date().getTime();
 
-            for (const record of req.body.records) {
-                const startDate = verifyTimeToken(req.body.token, record.timeToken);
-                if (!startDate) {
+            for (const record of req.body.data) {
+                const startTime = startDate.getTime() + record.from * 1000;
+                if (record.to * 1000 + startTime > now) {
                     failWithReason(res, UploadLearnTimeFail.INVALID_DATA);
                     return;
                 }
-                const startTime = startDate.getTime();
-
-                for (const item of record.data) {
-                    if (item.to * 1000 + startTime > now) {
-                        failWithReason(res, UploadLearnTimeFail.INVALID_DATA);
-                        return;
-                    }
-                }
             }
 
-            for (const record of req.body.records) {
-                const startDate = verifyTimeToken(req.body.token, record.timeToken);
-                const startTime = startDate!.getTime();
-
-                for (const item of record.data) {
-                    await LearnTime.create({
-                        userId: user.id,
-                        startAt: new Date(item.from * 1000 + startTime),
-                        endAt: new Date(item.to * 1000 + startTime),
-                    });
-                }
-            }
+            await LearnTime.bulkCreate(
+                req.body.data.map((record) => ({
+                    userId: user.id,
+                    startAt: new Date(startDate.getTime() + record.from * 1000),
+                    endAt: new Date(startDate.getTime() + record.to * 1000),
+                })),
+            );
 
             const threeDaysAgo = new Date(now - 3 * 24 * 60 * 60 * 1000);
             const oldRecords = await LearnTime.findAll({
@@ -60,8 +52,16 @@ export const handleUploadLearnTimeApi = (app: Express) =>
             let oldTotal = 0;
             for (const record of oldRecords) {
                 oldTotal += Math.floor((record.endAt.getTime() - record.startAt.getTime()) / 1000);
-                await record.destroy();
             }
+
+            await LearnTime.destroy({
+                where: {
+                    userId: user.id,
+                    startAt: {
+                        [Op.lt]: threeDaysAgo,
+                    },
+                },
+            });
 
             let oldTime = await OldLearnTime.findByPk(user.id);
             if (!oldTime) {
@@ -71,7 +71,7 @@ export const handleUploadLearnTimeApi = (app: Express) =>
             oldTime.time += oldTotal;
             await oldTime.save();
 
-            const newTimeToken = createTimeToken(req.body.token);
+            const newTimeToken = req.body.requestNewToken ? createTimeToken(req.body.token) : '';
 
             succeed(res, { timeToken: newTimeToken! });
         } catch (e) {

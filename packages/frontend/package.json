@@ -20,6 +20,7 @@
         "@fortawesome/vue-fontawesome": "^3.0.8",
         "axios": "^1.7.9",
         "crypto-js": "^4.2.0",
+        "echarts": "^5.6.0",
         "element-plus": "^2.9.4",
         "kramed": "^0.5.6",
         "pinia": "^2.3.1",

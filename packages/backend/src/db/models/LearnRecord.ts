@@ -13,6 +13,10 @@ export class LearnRecord extends Model<InferAttributes<LearnRecord>, InferCreati
     @NotNull()
     declare knowledgeItemId: number;
 
+    @Attribute(DataTypes.DATE)
+    @NotNull()
+    declare date: Date;
+
     @BelongsTo(() => User, {
         foreignKey: 'userId',
         targetKey: 'id',

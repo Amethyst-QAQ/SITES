@@ -40,7 +40,7 @@ const logout = async () => {
         await request('/logout', { token: session.token });
     } catch (e) {}
 
-    session.loggedIn = false;
+    session.cleanSession();
     session.userInfo = undefined;
     myAlert.success('登出成功');
 };

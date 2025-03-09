@@ -8,10 +8,15 @@ export type ParsedAttachments = {
     images: string[];
 };
 
+const parseEscapedAttachment = (content: string) => {
+    const attachment = /(=*)=(?={{attachment::\S+?}})/g;
+    return content.replace(attachment, (_, g1) => g1);
+};
+
 export const parseAttachments = (content: string) => {
     const result: ParsedAttachments = { fragments: [], images: [] };
 
-    const imgParseRe = /!\[.+?\]\((\S+?)\)/g;
+    const imgParseRe = /(?<!=+)!\[.+?\]\((\S+?)\)/g;
     let imgParseMatch: RegExpExecArray | null = null;
     while ((imgParseMatch = imgParseRe.exec(content)) != null) {
         result.images.push(imgParseMatch[1]);
@@ -24,19 +29,24 @@ export const parseAttachments = (content: string) => {
         content = hasFirstAttachment[2];
     }
 
-    const parseRe = /^(.+?)(?:{{attachment::(\S+?)}}|$)/gs;
+    const parseRe = /(.+?)(?:(?<!=+){{attachment::(\S+?)}}|$)/gs;
 
     let parseMatch: RegExpExecArray | null = null;
     while ((parseMatch = parseRe.exec(content)) != null) {
         if (!parseMatch[2]) {
             if (!/^\s*$/s.test(parseMatch[1])) {
-                result.lastFragment = parseMatch[1];
+                result.lastFragment = parseEscapedAttachment(parseMatch[1]);
             }
             return result;
         }
-        result.fragments.push({ content: parseMatch[1], attachment: parseMatch[2] });
+        result.fragments.push({ content: parseEscapedAttachment(parseMatch[1]), attachment: parseMatch[2] });
     }
     return result;
+};
+
+const rebuildEscapedAttachment = (content: string) => {
+    const escapeRe = /=*{{attachment:\S*}}/g;
+    return content.replace(escapeRe, (s) => `=${s}`);
 };
 
 export const rebuildMarkdown = (parsed: ParsedAttachments) => {
@@ -45,11 +55,11 @@ export const rebuildMarkdown = (parsed: ParsedAttachments) => {
         output += `{{attachment::${parsed.firstAttachment}}}`;
     }
     for (const fragment of parsed.fragments) {
-        output += fragment.content;
+        output += rebuildEscapedAttachment(fragment.content);
         output += `{{attachment::${fragment.attachment}}}`;
     }
     if (parsed.lastFragment) {
-        output += parsed.lastFragment;
+        output += rebuildEscapedAttachment(parsed.lastFragment);
     }
     return output;
 };

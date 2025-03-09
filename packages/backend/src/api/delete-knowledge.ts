@@ -5,6 +5,7 @@ import { failWithReason, succeed } from '../utils/send-res';
 import { needAdmin } from '../utils/need-admin';
 import { Knowledge } from '../db/models/Knowledge';
 import { Op } from '@sequelize/core';
+import { KnowledgeItem } from '../db/models/KnowledgeItem';
 
 export const handleDeleteKnowledgeApi = (app: Express) =>
     createApi<DeleteKnowledgeReq, DeleteKnowledgeRes>(app, '/delete-knowledge', async (req, res) => {
@@ -14,6 +15,7 @@ export const handleDeleteKnowledgeApi = (app: Express) =>
                 return;
             }
 
+            await KnowledgeItem.destroy({ where: { knowledgeId: { [Op.in]: req.body.ids } } });
             await Knowledge.destroy({ where: { id: { [Op.in]: req.body.ids } } });
             succeed(res);
         } catch (e) {

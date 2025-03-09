@@ -237,7 +237,7 @@ const setImportance = async (importance: boolean) => {
             switch (response.reason) {
                 case SetExamInfoImportanceFail.NOT_LOGGED_IN:
                     myAlert.error('未登录');
-                    session.loggedIn = false;
+                    session.cleanSession();
                     router.push('/');
                     break;
                 case SetExamInfoImportanceFail.NO_PERMISSION:
@@ -279,7 +279,7 @@ const deleteAll = async () => {
             switch (response.reason) {
                 case DeleteExamInfoFail.NOT_LOGGED_IN:
                     myAlert.error('未登录');
-                    session.loggedIn = false;
+                    session.cleanSession();
                     router.push('/');
                     break;
                 case DeleteExamInfoFail.NO_PERMISSION:
