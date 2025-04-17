@@ -11,6 +11,15 @@ import { KnowledgeItem } from './models/KnowledgeItem';
 import { LearnRecord } from './models/LearnRecord';
 import { LearnTime } from './models/LearnTime';
 import { OldLearnTime } from './models/OldLearnTime';
+import { ChoiceQuestion } from './models/ChoiceQuestion';
+import { SubjectiveQuestion } from './models/SubjectiveQuestion';
+import { Choice } from './models/Choice';
+import { Exam } from './models/Exam';
+import { ExamChoiceQuestion } from './models/ExamChoiceQuestion';
+import { ExamSubjectiveQuestion } from './models/ExamSubjectiveQuestion';
+import { ExamAnswer } from './models/ExamAnswer';
+import { ChoiceAnswer } from './models/ChoiceAnswer';
+import { SubjectiveAnswer } from './models/SubjectiveAnswer';
 
 export const sequelize = new Sequelize({
     dialect: SqliteDialect,
@@ -26,5 +35,14 @@ export const sequelize = new Sequelize({
         LearnRecord,
         LearnTime,
         OldLearnTime,
+        ChoiceQuestion,
+        SubjectiveQuestion,
+        Choice,
+        Exam,
+        ExamChoiceQuestion,
+        ExamSubjectiveQuestion,
+        ExamAnswer,
+        ChoiceAnswer,
+        SubjectiveAnswer,
     ],
 });

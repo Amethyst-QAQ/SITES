@@ -16,7 +16,7 @@ const parseEscapedAttachment = (content: string) => {
 export const parseAttachments = (content: string) => {
     const result: ParsedAttachments = { fragments: [], images: [] };
 
-    const imgParseRe = /(?<!=+)!\[.+?\]\((\S+?)\)/g;
+    const imgParseRe = /(?<!=+)!\[.*?\]\((\S+?)\)/g;
     let imgParseMatch: RegExpExecArray | null = null;
     while ((imgParseMatch = imgParseRe.exec(content)) != null) {
         result.images.push(imgParseMatch[1]);

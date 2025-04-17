@@ -1,7 +1,7 @@
 import { LoginFail } from 'types/api/login';
 import { User } from '../db/models/User';
 
-const generateToken = () => {
+export const generateToken = () => {
     const table = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
     let result = '';
     for (let i = 0; i < 64; i++) {

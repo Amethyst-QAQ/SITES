@@ -13,6 +13,7 @@ import { PermissionLevel } from 'types/lib/permission-level';
 import { LearnRecord } from './LearnRecord';
 import { LearnTime } from './LearnTime';
 import { OldLearnTime } from './OldLearnTime';
+import { ExamAnswer } from './ExamAnswer';
 
 export class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
     @Attribute(DataTypes.INTEGER)
@@ -68,4 +69,13 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
         },
     })
     declare oldLearnTime?: NonAttribute<OldLearnTime>;
+
+    @HasMany(() => ExamAnswer, {
+        foreignKey: 'userId',
+        sourceKey: 'id',
+        inverse: {
+            as: 'user',
+        },
+    })
+    declare answers?: NonAttribute<ExamAnswer>;
 }

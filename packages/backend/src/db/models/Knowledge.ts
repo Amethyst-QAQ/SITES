@@ -3,6 +3,8 @@ import { DataTypes, Model } from '@sequelize/core';
 import { Attribute, AutoIncrement, BelongsTo, HasMany, NotNull, PrimaryKey } from '@sequelize/core/decorators-legacy';
 import { KnowledgeCategory } from './KnowledgeCategory';
 import { KnowledgeItem } from './KnowledgeItem';
+import { ChoiceQuestion } from './ChoiceQuestion';
+import { SubjectiveQuestion } from './SubjectiveQuestion';
 
 export class Knowledge extends Model<InferAttributes<Knowledge>, InferCreationAttributes<Knowledge>> {
     @Attribute(DataTypes.INTEGER)
@@ -40,4 +42,22 @@ export class Knowledge extends Model<InferAttributes<Knowledge>, InferCreationAt
         },
     })
     declare items?: NonAttribute<KnowledgeItem[]>;
+
+    @HasMany(() => ChoiceQuestion, {
+        foreignKey: 'knowledgeId',
+        sourceKey: 'id',
+        inverse: {
+            as: 'knowledge',
+        },
+    })
+    declare choiceQuestions?: NonAttribute<ChoiceQuestion[]>;
+
+    @HasMany(() => SubjectiveQuestion, {
+        foreignKey: 'knowledgeId',
+        sourceKey: 'id',
+        inverse: {
+            as: 'knowledge',
+        },
+    })
+    declare subjectiveQuestions?: NonAttribute<SubjectiveQuestion[]>;
 }

@@ -3,7 +3,7 @@
         <MarkdownAttachment v-if="parsedContent.firstAttachment" :file="parsedContent.firstAttachment" />
         <template v-for="fragment in parsedContent.fragments">
             <div v-html="fragment.content"></div>
-            <MarkdownAttachment :file="fragment.content" />
+            <MarkdownAttachment :file="fragment.attachment" />
         </template>
         <div v-if="parsedContent.lastFragment" v-html="parsedContent.lastFragment"></div>
     </div>
