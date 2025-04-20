@@ -20,6 +20,8 @@ import { ExamSubjectiveQuestion } from './models/ExamSubjectiveQuestion';
 import { ExamAnswer } from './models/ExamAnswer';
 import { ChoiceAnswer } from './models/ChoiceAnswer';
 import { SubjectiveAnswer } from './models/SubjectiveAnswer';
+import { Post } from './models/Post';
+import { Comment } from './models/Comment';
 
 export const sequelize = new Sequelize({
     dialect: SqliteDialect,
@@ -44,5 +46,7 @@ export const sequelize = new Sequelize({
         ExamAnswer,
         ChoiceAnswer,
         SubjectiveAnswer,
+        Post,
+        Comment,
     ],
 });

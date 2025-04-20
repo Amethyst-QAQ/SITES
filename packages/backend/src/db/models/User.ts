@@ -14,6 +14,8 @@ import { LearnRecord } from './LearnRecord';
 import { LearnTime } from './LearnTime';
 import { OldLearnTime } from './OldLearnTime';
 import { ExamAnswer } from './ExamAnswer';
+import { Post } from './Post';
+import { Comment } from './Comment';
 
 export class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
     @Attribute(DataTypes.INTEGER)
@@ -78,4 +80,22 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
         },
     })
     declare answers?: NonAttribute<ExamAnswer>;
+
+    @HasMany(() => Post, {
+        foreignKey: 'userId',
+        sourceKey: 'id',
+        inverse: {
+            as: 'user',
+        },
+    })
+    declare posts?: NonAttribute<Post[]>;
+
+    @HasMany(() => Comment, {
+        foreignKey: 'userId',
+        sourceKey: 'id',
+        inverse: {
+            as: 'user',
+        },
+    })
+    declare comments?: NonAttribute<Comment[]>;
 }

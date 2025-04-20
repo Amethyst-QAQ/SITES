@@ -24,7 +24,7 @@ export const handleGetExamsApi = (app: Express) =>
             succeed(res, {
                 data: exams.map((e) => ({
                     token: e.exam!.token,
-                    date: e.date.getDate(),
+                    date: e.date.getTime(),
                 })),
             });
         } catch (e) {
