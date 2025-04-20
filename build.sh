@@ -8,5 +8,3 @@ Set-Location ../backend
 pnpm build
 Set-Location ../frontend
 pnpm build
-Set-Location ../upload-tool
-pnpm build

@@ -3,7 +3,7 @@ export type GetPostsReq = {
     from: number;
 };
 
-export type PostInList = { id: number; title: string; content: string };
+export type PostInList = { id: number; title: string };
 
 export type GetPostsRes =
     | {

@@ -12,7 +12,7 @@ export const handleGetPostsApi = (app: Express) =>
                 limit: req.body.count,
                 offset: req.body.from,
             });
-            succeed(res, { data: posts.map((p) => ({ id: p.id, title: p.title, content: p.content })) });
+            succeed(res, { data: posts.map((p) => ({ id: p.id, title: p.title })) });
         } catch (e) {
             fail(res);
         }

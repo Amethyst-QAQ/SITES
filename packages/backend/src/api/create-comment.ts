@@ -1,7 +1,7 @@
 import type { Express } from 'express';
 import { createApi } from '../create-api';
 import { CreateCommentFail, type CreateCommentReq, type CreateCommentRes } from 'types/api/create-comment';
-import { failWithReason } from '../utils/send-res';
+import { failWithReason, succeed } from '../utils/send-res';
 import { needLogin } from '../utils/need-login';
 import { Post } from '../db/models/Post';
 import { Comment } from '../db/models/Comment';
@@ -40,6 +40,7 @@ export const handleCreateCommentApi = (app: Express) =>
                 content: req.body.content,
                 postId: post.id,
             });
+            succeed(res);
         } catch (e) {
             failWithReason(res, CreateCommentFail.UNKNOWN);
         }
