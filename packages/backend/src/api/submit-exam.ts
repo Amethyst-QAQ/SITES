@@ -49,7 +49,7 @@ export const handleSubmitExamApi = (app: Express) =>
             }
 
             for (let i = 0; i < exam.subjectiveQuestions!.length; i++) {
-                const userAnswer = req.body.answers[i];
+                const userAnswer = req.body.answers[i + exam.choiceQuestions!.length];
                 if (typeof userAnswer != 'string') {
                     failWithReason(res, SubmitExamFail.WRONG_DATA);
                     return;
@@ -77,7 +77,7 @@ export const handleSubmitExamApi = (app: Express) =>
                     .map((v, i) => {
                         const value = v as string;
                         return {
-                            questionId: exam.subjectiveQuestions![i - exam.choiceQuestions!.length].question!.id,
+                            questionId: exam.subjectiveQuestions![i].question!.id,
                             answerId: examAnswer.id,
                             answer: value,
                         };

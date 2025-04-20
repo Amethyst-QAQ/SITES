@@ -6,6 +6,7 @@ import { PermissionLevel } from 'types/lib/permission-level';
 import type { RouteRecordRaw } from 'vue-router';
 import { adminExamInfoRoutes } from './admin/exam-info';
 import { adminKnowledgeRoutes } from './admin/knowledge';
+import { adminQuestionRoutes } from './admin/question';
 
 export const adminRoute: RouteRecordRaw = {
     path: '/admin',
@@ -30,5 +31,6 @@ export const adminRoute: RouteRecordRaw = {
         },
         ...adminExamInfoRoutes,
         ...adminKnowledgeRoutes,
+        ...adminQuestionRoutes,
     ],
 };

@@ -3,7 +3,7 @@ import { parseAttachments, type ParsedAttachments } from './parse-attachments';
 import { useSessionStore } from '@/stores/session';
 import { UploadFileFail } from 'types/lib/upload-file-fail';
 
-const collectMdFiles = async (dirHandle: FileSystemDirectoryHandle, logs: string[]) => {
+export const collectMdFiles = async (dirHandle: FileSystemDirectoryHandle, logs: string[]) => {
     const mdFiles: Array<{ fileHandle: FileSystemFileHandle; dirHandle: FileSystemDirectoryHandle }> = [];
     const traverse = async (currentDirHandle: FileSystemDirectoryHandle) => {
         for await (const entry of (currentDirHandle as any).values() as FileSystemHandle[]) {

@@ -11,7 +11,7 @@
                 </div>
                 <div class="elem-middle">
                     <RouterLink to="/knowledge">必背资料</RouterLink>
-                    <RouterLink to="/">模拟练习</RouterLink>
+                    <RouterLink to="/questions">模拟练习</RouterLink>
                     <RouterLink to="/exam-info">考试信息</RouterLink>
                     <RouterLink to="/">社区论坛</RouterLink>
                 </div>

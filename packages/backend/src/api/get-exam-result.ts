@@ -21,10 +21,20 @@ export const handleGetExamResultApi = (app: Express) =>
                     {
                         association: 'choiceQuestions',
                         order: ['sequenceId'],
+                        include: {
+                            association: 'question',
+                            include: {
+                                association: 'choices',
+                                order: ['sequenceId'],
+                            },
+                        },
                     },
                     {
                         association: 'subjectiveQuestions',
                         order: ['sequenceId'],
+                        include: {
+                            association: 'question',
+                        },
                     },
                 ],
             });

@@ -7,6 +7,7 @@ import { adminRoute } from './admin';
 import { examInfoRoute } from './exam-info';
 import { knowledgeRoute } from './knowledge';
 import { useSessionStore } from '@/stores/session';
+import { questionsRoute } from './questions';
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -22,6 +23,7 @@ const router = createRouter({
                 },
                 examInfoRoute,
                 knowledgeRoute,
+                questionsRoute,
             ],
         },
         {

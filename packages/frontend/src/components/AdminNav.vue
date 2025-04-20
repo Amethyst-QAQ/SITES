@@ -13,6 +13,8 @@
         <AdminNavLink to="knowledge-management">小考点管理</AdminNavLink>
         <AdminNavLink to="knowledge-item-management" disabled>知识点管理</AdminNavLink>
         <AdminNavLink to="knowledge-item-edit" disabled>知识点编辑</AdminNavLink>
+        <div class="title">模拟练习</div>
+        <AdminNavLink to="question-upload" disabled>习题上传</AdminNavLink>
     </div>
 </template>
 

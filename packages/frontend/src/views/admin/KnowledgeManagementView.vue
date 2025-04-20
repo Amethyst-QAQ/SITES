@@ -39,6 +39,16 @@
             </ElTableColumn>
             <ElTableColumn label="操作">
                 <template #default="scope">
+                    <ElButton
+                        @click="
+                            router.push({
+                                name: 'question-upload',
+                                params: { knowledgeId: scope.row.id },
+                            })
+                        "
+                    >
+                        上传习题
+                    </ElButton>
                     <ElButton v-if="scope.row.editing" @click="saveRow(scope.row)">保存</ElButton>
                     <ElButton v-else @click="scope.row.editing = true">编辑</ElButton>
                     <ElButton
