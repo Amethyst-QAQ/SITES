@@ -42,7 +42,7 @@ const parseChoiceQuestion = (content: string) => {
         throw new Error();
     }
 
-    const description = splitted.pop();
+    const description = splitted.shift();
 
     return { description, choices: splitted };
 };
